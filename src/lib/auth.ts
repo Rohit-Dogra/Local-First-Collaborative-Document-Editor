@@ -1,7 +1,10 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
+import { applyAuthUrlEnv } from "@/lib/auth-env";
 import { prisma } from "@/lib/prisma";
+
+applyAuthUrlEnv();
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
