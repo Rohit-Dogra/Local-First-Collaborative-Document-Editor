@@ -166,14 +166,21 @@ Application-level checks are primary. Optional PostgreSQL RLS policies are in `p
 1. Push to GitHub
 2. Import project in [Vercel](https://vercel.com) or [Netlify](https://netlify.com)
 3. Add env vars:
-   - `DATABASE_URL` — Supabase/Neon PostgreSQL connection string
+   - `DATABASE_URL` — **Netlify:** Supabase **Transaction pooler** URL (port `6543`, add `?pgbouncer=true`). Direct port `5432` often fails on serverless.
    - `AUTH_SECRET` — run `openssl rand -base64 32`
-   - `AUTH_URL` — **your live site URL** (e.g. `https://your-app.netlify.app`), not localhost
+   - `AUTH_URL` — optional on Netlify (`trustHost` is enabled). If set, use `https://your-app.netlify.app` only — not localhost.
    - `OPENAI_API_KEY` — optional
-4. Run `npx prisma db push` against production DB
+4. Run locally against production DB:
+   ```bash
+   npm run db:push
+   npm run db:seed
+   ```
 5. CI runs on every push (`.github/workflows/ci.yml`)
 
-**Netlify:** `netlify.toml` is included. Set `AUTH_URL` in the Netlify dashboard to your deployed URL (Site settings → Environment variables).
+**Netlify `DATABASE_URL`:** Supabase → Project Settings → Database → Connection string → **Transaction pooler** → URI. Example shape:
+`postgresql://postgres.[PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:6543/postgres?pgbouncer=true`
+
+Keep direct `5432` URL in local `.env` for `db:seed`. Use pooler URL only in Netlify env vars.
 
 ---
 

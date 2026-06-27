@@ -21,18 +21,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = credentials?.email?.toString().trim().toLowerCase();
-        const password = credentials?.password?.toString();
+        try {
+          const email = credentials?.email?.toString().trim().toLowerCase();
+          const password = credentials?.password?.toString();
 
-        if (!email || !password) return null;
+          if (!email || !password) return null;
 
-        const user = await prisma.user.findUnique({ where: { email } });
-        if (!user?.passwordHash) return null;
+          const user = await prisma.user.findUnique({ where: { email } });
+          if (!user?.passwordHash) return null;
 
-        const valid = await bcrypt.compare(password, user.passwordHash);
-        if (!valid) return null;
+          const valid = await bcrypt.compare(password, user.passwordHash);
+          if (!valid) return null;
 
-        return { id: user.id, email: user.email, name: user.name };
+          return { id: user.id, email: user.email, name: user.name };
+        } catch (error) {
+          console.error("Credentials authorize failed:", error);
+          return null;
+        }
       },
     }),
   ],

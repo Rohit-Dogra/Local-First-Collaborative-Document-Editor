@@ -34,7 +34,11 @@ export default function SignInPage() {
     });
 
     if (result?.error) {
-      setError("Invalid email or password");
+      setError(
+        result.error === "Configuration"
+          ? "Server cannot reach the database. On Netlify, set DATABASE_URL to Supabase pooler (port 6543)."
+          : "Invalid email or password"
+      );
       setLoading(false);
       return;
     }
