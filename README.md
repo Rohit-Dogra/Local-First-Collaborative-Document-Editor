@@ -90,7 +90,7 @@ cp .env.example .env
 ```env
 DATABASE_URL="postgresql://postgres:password@localhost:5432/collab_docs"
 AUTH_SECRET="run: openssl rand -base64 32"
-AUTH_URL="http://localhost:3000"
+AUTH_URL="http://127.0.0.1:3000"   # local dev only
 OPENAI_API_KEY="sk-..."   # optional, for AI features
 ```
 
@@ -162,14 +162,19 @@ Application-level checks are primary. Optional PostgreSQL RLS policies are in `p
 
 ---
 
-## Deployment (Vercel)
+## Deployment (Vercel / Netlify)
 
 1. Push to GitHub
-2. Import project in Vercel
-3. Add env vars: `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL`, `OPENAI_API_KEY`
-4. Use [Neon](https://neon.tech) or [Supabase](https://supabase.com) for PostgreSQL
-5. Run `npx prisma db push` against production DB
-6. CI runs on every push (`.github/workflows/ci.yml`)
+2. Import project in [Vercel](https://vercel.com) or [Netlify](https://netlify.com)
+3. Add env vars:
+   - `DATABASE_URL` — Supabase/Neon PostgreSQL connection string
+   - `AUTH_SECRET` — run `openssl rand -base64 32`
+   - `AUTH_URL` — **your live site URL** (e.g. `https://your-app.netlify.app`), not localhost
+   - `OPENAI_API_KEY` — optional
+4. Run `npx prisma db push` against production DB
+5. CI runs on every push (`.github/workflows/ci.yml`)
+
+**Netlify:** `netlify.toml` is included. Set `AUTH_URL` in the Netlify dashboard to your deployed URL (Site settings → Environment variables).
 
 ---
 

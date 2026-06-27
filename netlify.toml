@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  # AUTH_URL is a public site URL, not a credential — don't fail builds when it appears in output
+  SECRETS_SCAN_OMIT_KEYS = "AUTH_URL"
