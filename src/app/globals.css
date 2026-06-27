@@ -1,0 +1,79 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+  }
+
+  ::selection {
+    @apply bg-brand-200 text-brand-900;
+  }
+}
+
+@layer components {
+  .page-mesh {
+    @apply min-h-screen bg-slate-50 bg-mesh-gradient;
+  }
+
+  .glass-card {
+    @apply rounded-2xl border border-white/60 bg-white/80 shadow-card backdrop-blur-sm;
+  }
+
+  .surface-card {
+    @apply rounded-2xl border border-slate-200/80 bg-white shadow-card transition-shadow duration-200;
+  }
+
+  .surface-card-hover {
+    @apply surface-card hover:border-brand-200 hover:shadow-card-hover;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply btn bg-brand-600 px-4 py-2.5 text-sm text-white shadow-sm hover:bg-brand-700 hover:shadow-md active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply btn border border-slate-200 bg-white px-4 py-2.5 text-sm text-slate-700 shadow-sm hover:border-slate-300 hover:bg-slate-50 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply btn px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 hover:text-slate-900;
+  }
+
+  .btn-sm {
+    @apply px-3 py-1.5 text-xs;
+  }
+
+  .input-field {
+    @apply w-full rounded-xl border border-slate-200 bg-slate-50/50 px-4 py-2.5 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-brand-400 focus:bg-white focus:ring-2 focus:ring-brand-500/20;
+  }
+
+  .label-text {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-600 via-violet-600 to-brand-500 bg-clip-text text-transparent;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+
+  .badge-owner {
+    @apply badge bg-amber-50 text-amber-700 ring-1 ring-amber-200/60;
+  }
+
+  .badge-editor {
+    @apply badge bg-brand-50 text-brand-700 ring-1 ring-brand-200/60;
+  }
+
+  .badge-viewer {
+    @apply badge bg-slate-100 text-slate-600 ring-1 ring-slate-200/60;
+  }
+}

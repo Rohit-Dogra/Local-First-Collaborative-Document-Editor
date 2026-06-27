@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum DocumentRole {
+  OWNER
+  EDITOR
+  VIEWER
+}
+
+enum OperationType {
+  INSERT
+  DELETE
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  passwordHash  String?
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  ownedDocs     Document[]       @relation("DocumentOwner")
+  memberships   DocumentMember[]
+  operations    Operation[]
+  versions      DocumentVersion[]
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Document {
+  id        String   @id @default(cuid())
+  title     String
+  content   String   @default("")
+  ownerId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  owner      User              @relation("DocumentOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members    DocumentMember[]
+  operations Operation[]
+  versions   DocumentVersion[]
+
+  @@index([ownerId])
+}
+
+model DocumentMember {
+  id         String       @id @default(cuid())
+  documentId String
+  userId     String
+  role       DocumentRole @default(VIEWER)
+  createdAt  DateTime     @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, userId])
+  @@index([userId])
+}
+
+model Operation {
+  id         String        @id
+  documentId String
+  userId     String
+  type       OperationType
+  position   Int
+  text       String        @default("")
+  length     Int           @default(0)
+  lamport    Int
+  clientId   String
+  sequence   Int
+  createdAt  DateTime      @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([documentId, id])
+  @@index([documentId, lamport])
+}
+
+model DocumentVersion {
+  id         String   @id @default(cuid())
+  documentId String
+  userId     String
+  title      String
+  content    String
+  label      String?
+  createdAt  DateTime @default(now())
+
+  document Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, createdAt])
+}
