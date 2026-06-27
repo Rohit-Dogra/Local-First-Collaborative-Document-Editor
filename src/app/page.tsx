@@ -4,7 +4,12 @@ import { AppHeader, NavLink } from "@/components/app-header";
 import { ArrowRight, History, Shield, Wifi, Zap } from "lucide-react";
 
 export default async function HomePage() {
-  const session = await auth();
+  let session = null;
+  try {
+    session = await auth();
+  } catch {
+    // Auth/DB misconfigured — still render the marketing page
+  }
 
   return (
     <div className="page-mesh">
