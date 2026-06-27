@@ -4,10 +4,9 @@
 
 | | |
 |---|---|
-| **Name** | _Your Name Here_ |
-| **GitHub** | https://github.com/your-username/collab-doc-editor |
-| **LinkedIn** | https://linkedin.com/in/your-profile |
-| **Live Demo** | _Deploy to Vercel and paste URL here_ |
+| **Name** | Rohit Dogra |
+| **GitHub** | https://github.com/Rohit-Dogra/Local-First-Collaborative-Document-Editor
+| **Live Demo** |https://rohit-project01.netlify.app/ |
 
 ---
 
